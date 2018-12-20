@@ -54,7 +54,7 @@ p {
 
 input[type="text"] {
   font-family: 'Open Sans', 'Arial', sans-sefif;
-  font-size: 14px;
+  font-size: 30px;
 }
 
 /* borrowing Bootstrap style for btn elements, but combining styles a bit */

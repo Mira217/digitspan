@@ -90,11 +90,11 @@ var clearResponse = function() {
 var run_attention_checks = false
 var attention_check_thresh = 0.65
 var sumInstructTime = 0 //ms
-var instructTimeThresh = 3 ///in seconds
+var instructTimeThresh = 1 ///in seconds
 
 // task specific variables
 var num_digits = 3
-var num_trials = 14
+var num_trials = 1
 var curr_seq = []
 var stim_time = 800
 var gap_time = 200
@@ -118,7 +118,7 @@ var response_grid =
   '<button id = button_8 class = "square num-button" onclick = "recordClick(this)"><div class = content><div class = numbers>8</div></div></button>' +
   '<button id = button_9 class = "square num-button" onclick = "recordClick(this)"><div class = content><div class = numbers>9</div></div></button>' +
   '<button class = clear_button id = "ClearButton" onclick = "clearResponse()">Clear</button>' +
-  '<button class = submit_button id = "SubmitButton">Submit Answer</button></div>'
+  '<button class = submit_button id = "SubmitButton">Done!</button></div>'
 
 /* ************************************ */
 /* Set up jsPsych blocks */
@@ -147,10 +147,9 @@ var post_task_block = {
    data: {
        trial_id: "post task questions"
    },
-   questions: ['<p class = center-block-text style = "font-size: 20px">Please summarize what you were asked to do in this task.</p>',
-              '<p class = center-block-text style = "font-size: 20px">Do you have any comments about this task?</p>'],
-   rows: [15, 15],
-   columns: [60,60]
+   questions: ['<p class = center-block-text style = "font-size: 20px">Do you have any comments about this task?</p>'],
+   rows: [15],
+   columns: [60]
 };
 
 /* define static blocks */
@@ -164,7 +163,7 @@ var feedback_instruct_block = {
   },
   text: getInstructFeedback,
   timing_post_trial: 0,
-  timing_response: 3
+  timing_response: 1
 };
 /// This ensures that the subject does not read through the instructions too quickly.  If they do it too quickly, then we will go over the loop again.
 var instructions_block = {
@@ -173,11 +172,12 @@ var instructions_block = {
     trial_id: "instruction"
   },
   pages: [
-'<div class = centerbox><p class = block-text>In this test you will have to try to remember a sequence of numbers that will appear on the screen one after the other. At the end of each trial, enter all the numbers into the presented numpad in the sequence in which they occurred. Do your best to memorize the numbers, but do not write them down or use any other external tool to help you remember them.</p><p class = block-text>Trials will start after you end instructions.</p></div>'
+'<div class = centerbox><p class = block-text>In this first part, you will need to recall 14 sequences of digits <strong> in the same order </strong> as they will be presented on the screen one after another. \
+<p class = block-text>At the end of each trial, enter all the numbers into the presented numpad.</p> <p class = block-text> Try to memorize the numbers, but do not write them down.</p><p class = block-text></div>'
  ],
   allow_keys: false,
   show_clickable_nav: true,
-  timing_post_trial: 500
+  timing_post_trial: 100
 };
 
 var instruction_node = {
@@ -204,12 +204,12 @@ var instruction_node = {
 
 var end_block = {
   type: 'poldrack-text',
-  timing_response: 180000,
+  timing_response: 1000,
   data: {
     trial_id: "end",
     exp_id: 'digit_span'
   },
-  text: '<div class = centerbox><p class = center-block-text>Thanks for completing this task!</p><p class = center-block-text>Press <strong>enter</strong> to continue.</p></div>',
+  text: '<div class = centerbox><p class = center-block-text>Thanks for completing this task!</p><p class = center-block-text></div>',
   cont_key: [13],
   timing_post_trial: 0
 };
@@ -231,14 +231,14 @@ var start_test_block = {
 
 var start_reverse_block = {
   type: 'poldrack-text',
-  timing_response: 180000,
+  timing_response: 7000,
   data: {
     trial_id: "start_reverse"
   },
-  text: '<div class = centerbox><p class = block-text>In these next trials, instead of reporting back the sequence you just saw, report the <strong>reverse</strong> of that sequence. So the last item should be first in your response, the second to last should be the second in your response, etc...</p><p class = block-text>Press <strong>enter</strong> to begin.</p></div>',
+  text: '<div class = centerbox><p class = block-text>In these next trials, instead of reporting the sequence you just saw, report the <strong>reverse</strong> of that sequence.</p><p class = block-text>This means the last digit you see should be first in your response, the second to last should be the second in your response, etc...</p></div>',
   cont_key: [13],
   on_finish: function() {
-  	errors = 0
+    errors = 0
     num_digits = 3
     stims = setStims()
   }
@@ -364,18 +364,18 @@ var feedback_block = {
 var digit_span_experiment = [];
 digit_span_experiment.push(instruction_node);
 for (i = 0; i < num_trials ; i++ ) {
-	digit_span_experiment.push(start_test_block)
-	digit_span_experiment.push(test_block)
-	digit_span_experiment.push(forward_response_block)
-	digit_span_experiment.push(feedback_block)
+  digit_span_experiment.push(start_test_block)
+  digit_span_experiment.push(test_block)
+  digit_span_experiment.push(forward_response_block)
+  digit_span_experiment.push(feedback_block)
 }
 digit_span_experiment.push(attention_node)
 digit_span_experiment.push(start_reverse_block)
 for (i = 0; i < num_trials ; i++ ) {
-	digit_span_experiment.push(start_test_block)
-	digit_span_experiment.push(test_block)
-	digit_span_experiment.push(reverse_response_block)
-	digit_span_experiment.push(feedback_block)
+  digit_span_experiment.push(start_test_block)
+  digit_span_experiment.push(test_block)
+  digit_span_experiment.push(reverse_response_block)
+  digit_span_experiment.push(feedback_block)
 }
 digit_span_experiment.push(post_task_block)
 digit_span_experiment.push(end_block)
